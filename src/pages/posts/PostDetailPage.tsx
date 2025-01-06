@@ -1,4 +1,4 @@
-import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Post } from "../../interfaces/Post";
@@ -42,16 +42,19 @@ const PostDetailPage: React.FC = () => {
             </Link>
             <Typography sx={{ color: 'text.primary' }}>{post.id}</Typography>
         </Breadcrumbs>
-        <div>
-            <h3>Title: {post.title}</h3>
-            <span>{post.body}</span>
-        </div>
-        <div style={{ display: "flex", gap: "8px", justifyContent: "start", marginTop: '50px' }}>
-            Posted by: <UserAvatar user = {post.user}/> {post.user.name}
-        </div>
-        <ThemeButtonDanger onClick={() => {
-            setOpen(true);
-        }}><Delete />Delete</ThemeButtonDanger>
+        <Box sx={{ margin: 5 }}>
+            <div>
+                <h3>Title: {post.title}</h3>
+                <span>{post.body}</span>
+            </div>
+            <div style={{ display: "flex", gap: "8px", justifyContent: "start", marginTop: '50px' }}>
+                Posted by: <UserAvatar user = {post.user}/> {post.user.name}
+            </div>
+            <br />
+            <ThemeButtonDanger onClick={() => {
+                setOpen(true);
+            }}><Delete />Delete</ThemeButtonDanger>
+        </Box>
     </Container>
 
     {open && (

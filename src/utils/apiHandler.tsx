@@ -36,8 +36,9 @@ const PostApi = async(url: string, body: string) => {
         });
         return await handleResponse(response);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Error creating ${apiUrl} :`, error);
+        throw new Error(error || 'Something went wrong!'); 
     }
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Collapse, Container, IconButton, Link, List, ListItem, ListItemText, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Collapse, Container, IconButton, Link, List, ListItem, ListItemText, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Delete, Visibility, PersonAddAlt1 } from '@mui/icons-material';
@@ -112,6 +112,12 @@ const UsersPage: React.FC = () => {
     const [error, setError] = useState<string>('');
     const [open, setOpen] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<User>();
+
+    const [total, setTotal] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const pageSize = 10;
+
     const navigate = useNavigate();
 
     const onClickDelete = (user: User) => {
@@ -133,13 +139,15 @@ const UsersPage: React.FC = () => {
     };
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchUsers = async (page: number) => {
             try {
-              const data = await GetApi('/users');
+              const data = await GetApi(`/users?page=${page}&size=${pageSize}`);
               setUsers(
-                data.map((userData: any) => {
+                data.content.map((userData: any) => {
                   return new UserData(userData).getUser();
               }));
+
+              setTotal(data.totalElements);
               //setUsers(data);
             } catch (error: any) {
               setError(error.message);
@@ -147,12 +155,16 @@ const UsersPage: React.FC = () => {
               setLoading(false);
             }
         };
-        fetchUsers();
-    }, []);
+        fetchUsers(currentPage);
+    }, [currentPage]);
 
     const addUser = () => {
         navigate('/app/users/create');
     }
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+      setCurrentPage(page);
+    };
 
     return (
     <Container>
@@ -204,12 +216,21 @@ const UsersPage: React.FC = () => {
       {open && (
         <ConfirmationDialog 
             heading={'Delete user'}
-            body={`Do you want to delete ${selectedUser!.name}?`}
+            body={`Do you want to delete ${selectedUser!.name} (${selectedUser!.email})?`}
             open = {open}
             onClose = {() => {setOpen(false)}}
             onConfirm= {handleDeleteUser}
         />
       )}
+
+      <div style={{ display: "flex", justifyContent: "center", margin: "20px 0px" }}>
+        <Pagination 
+          count={Math.ceil(total / pageSize)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </div>
     </Container>
     );
 };

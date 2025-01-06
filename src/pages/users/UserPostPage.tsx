@@ -43,7 +43,7 @@ const UserPostPage: React.FC = () => {
           </Button>
         </Toolbar>
         
-        <h3>Owner: {user.name}</h3>
+        <h3>Owner: {user.name} ({posts.length})</h3>
         <List>
           {posts.map((post) => (
             <PostItem 
