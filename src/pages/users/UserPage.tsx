@@ -170,7 +170,7 @@ const UsersPage: React.FC = () => {
     <Container>
         <Toolbar style={{ position: "sticky", display: "flex", justifyContent: "space-between" }}>
             <Typography align='left' variant="h5" gutterBottom>
-                Users ({users.length})
+                Users ({total})
             </Typography>
             <Button variant="outlined" startIcon={<PersonAddAlt1 />} onClick={addUser}>
                 Add User
