@@ -1,19 +1,22 @@
 import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { GetApi } from "../../utils/apiHandler";
 
 const UserDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`/users/${id}`)
-      .then((response) => response.json())
-      .then((data) => setUser(data));
+    GetApi('/users/' + id)
+    .then((data) => {
+      setUser(data);
+    })
+
   }, [id]);
 
   if (!user) {
-    return <p>Loading user details...</p>;
+    return <p>Loading post details...</p>;
   }
 
   return (

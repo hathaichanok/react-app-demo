@@ -3,7 +3,7 @@ import { Button, CircularProgress, Container, List, Pagination, Toolbar, Typogra
 import { Post } from '../../interfaces/Post';
 import { PostItem } from '../../components/PostItem';
 import { PostAdd } from '@mui/icons-material';
-import { ConfirmationDialog } from '../../components/ConfirmationDialog';
+import { GetApi } from '../../utils/apiHandler';
 
 const PostsPage: React.FC = () => {
 
@@ -19,11 +19,7 @@ const PostsPage: React.FC = () => {
     useEffect(() => {
         const fetchPosts = async (page: number) => {
             try {
-                const response = await fetch(`/posts?page=${page}&size=${pageSize}`);
-                if (!response.ok) {
-                  throw new Error('Failed to fetch posts');
-                }
-                const data = await response.json();
+                const data = await GetApi(`/posts?page=${page}&size=${pageSize}`);
                 //console.log(data);
                 setPosts(data.content);
                 setTotal(data.totalElements);
@@ -46,9 +42,6 @@ const PostsPage: React.FC = () => {
           <Typography align='left' variant="h5" gutterBottom>
               Posts ({total})
           </Typography>
-          <Button variant="outlined" startIcon={<PostAdd />} onClick={() => {}}>
-              Add Post
-          </Button>
       </Toolbar>
       
       {loading && <CircularProgress />}

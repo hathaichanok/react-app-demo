@@ -7,15 +7,10 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/users': {
+      '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/users/, '/users'), // Optional rewrite
-      },
-      '/posts': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/posts/, '/posts'), // Optional rewrite
+        rewrite: (path) => path.replace(/^\/api/, '/api'), // Optional rewrite
       },
     },
   },

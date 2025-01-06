@@ -4,10 +4,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Delete, Visibility, PersonAddAlt1 } from '@mui/icons-material';
 import { ThemeButtonDanger, ThemeButtonPrimary } from '../../components/ThemeButton';
-import { User } from '../../interfaces/User';
+import { User, UserData } from '../../interfaces/User';
 import { useNavigate } from 'react-router-dom';
 import { ConfirmationDialog } from '../../components/ConfirmationDialog';
 import { UserAvatar } from '../../components/UserAvatar';
+import { DeleteApi, GetApi } from '../../utils/apiHandler';
 
 
 function UserDataRow(props: { 
@@ -74,9 +75,9 @@ function UserDataRow(props: {
                             secondary={
                             <>
                                 <Typography variant="body2" color="textSecondary">
-                                {user.address.suite}, {user.address.street}, {user.address.city}, {user.address.zipcode}
+                                {user.address.getFullAddressInfo()}
                                 </Typography>
-                                <Link href={'https://maps.google.com/?q='+user.address.geo.lat+','+user.address.geo.lng} underline="hover" target="_blank">
+                                <Link href={user.address.getGeoLink()} underline="hover" target="_blank">
                                     {'Open in map'}
                                 </Link>
                             </>
@@ -89,7 +90,7 @@ function UserDataRow(props: {
                             secondary={
                             <>
                                 <Typography variant="body2" color="textSecondary">
-                                {user.company.name} - {user.company.catchPhrase}
+                                {user.company.getFullCompanyInfo()}
                                 </Typography>
                             </>
                             }
@@ -124,12 +125,7 @@ const UsersPage: React.FC = () => {
 
     const handleDeleteUser = async () => {
         try {
-          const response = await fetch(`/users/${selectedUser!.id}`, {
-            method: 'DELETE',
-          });
-          if (!response.ok) throw new Error('Failed to delete user');
-    
-          // Update the local state after successful deletion
+          await DeleteApi('/users', selectedUser!.id);
           setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser!.id));
         } catch (error: any) {
           console.error('Error deleting user:', error.message);
@@ -139,13 +135,12 @@ const UsersPage: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-              const response = await fetch('/users');
-              if (!response.ok) {
-                throw new Error('Failed to fetch users');
-              }
-              const data = await response.json();
-              //console.log(data);
-              setUsers(data);
+              const data = await GetApi('/users');
+              setUsers(
+                data.map((userData: any) => {
+                  return new UserData(userData).getUser();
+              }));
+              //setUsers(data);
             } catch (error: any) {
               setError(error.message);
             } finally {

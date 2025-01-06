@@ -1,4 +1,4 @@
-import { Breadcrumbs, Container, Divider, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Post } from "../../interfaces/Post";
@@ -6,6 +6,7 @@ import { UserAvatar } from "../../components/UserAvatar";
 import { ThemeButtonDanger } from "../../components/ThemeButton";
 import { Delete } from "@mui/icons-material";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
+import { DeleteApi, GetApi } from "../../utils/apiHandler";
 
 const PostDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,9 +15,8 @@ const PostDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`/posts/${id}`)
-      .then((response) => response.json())
-      .then((data) => setPost(data));
+    GetApi(`/posts/${id}`)
+    .then((data) => setPost(data));
   }, [id]);
 
   if (!post) {
@@ -25,11 +25,7 @@ const PostDetailPage: React.FC = () => {
 
   const handleDeletePost = async () => {
     try {
-        const response = await fetch(`/posts/${post.id}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) throw new Error('Failed to delete post');
-
+        await DeleteApi('/posts', post.id)
         navigate('/app/posts/');
   
       } catch (error: any) {
