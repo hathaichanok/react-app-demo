@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { User } from "../interfaces/User"
-import { Post } from "../interfaces/Post";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { PostApi } from "../utils/apiHandler";
-import { useNavigate } from "react-router-dom";
 
 interface PostData {
     title: string,
@@ -28,7 +26,7 @@ export const CreatePostModal = (props: {
         onClose();
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setPost((prevData) => ({
           ...prevData,
@@ -36,12 +34,11 @@ export const CreatePostModal = (props: {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
         PostApi('/posts', JSON.stringify(post))
         .then(() => {
             window.location.reload();
-            //onClose()
-            //navigate('/app/users/' + user.id + '/posts');
         })
     }
 

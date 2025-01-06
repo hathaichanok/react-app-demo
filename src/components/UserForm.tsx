@@ -33,7 +33,7 @@ interface CompanyForm {
     bs: string;
 }
 
-const UserForm: React.FC = () => {
+const UserForm = () => {
     const [userForm, setUserForm] = useState<UserForm>(
         {
             name: "",
