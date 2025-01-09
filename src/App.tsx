@@ -10,6 +10,7 @@ import { PeopleAlt, Description} from '@mui/icons-material';
 import UserForm from './components/UserForm';
 import UserDetailPage from './pages/users/UserDetailPage';
 import UserPostPage from './pages/users/UserPostPage';
+import PostDetailPage from './pages/posts/PostDetailPage';
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -49,7 +50,7 @@ const App: React.FC = () => {
               <Route path="/app/users/:id/posts" element={<UserPostPage />} />
               <Route path="/app/users/create" element={<UserForm />} />
               <Route path="/app/posts" element={<PostsPage />} />
-              <Route path="/app/posts/:id" element={<PostsPage />} />
+              <Route path="/app/posts/:id" element={<PostDetailPage />} />
             </Routes>
           </DashboardLayout>
         </AppProvider>
